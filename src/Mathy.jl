@@ -52,6 +52,20 @@ julia> @\$ ∑ { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
 julia> @\$ ∏ { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
 501760000
 ```
+
+curly braces can be nested (although it is not optimized yet as of
+Transducers 0.2.1):
+
+```jldoctest; setup = :(using Mathy)
+julia> @\$ + { 1:10 | isodd(_) } .^ 2
+165
+
+julia> @\$ 0 + { 2 .* ({ 1:10 | isodd(_) } .^ 2 .+ 1) .- 1 | _ % 3 == 0 }
+153
+
+julia> ans == sum(filter(x -> x % 3 == 0, 2 .* (filter(isodd, 1:10) .^ 2 .+ 1) .- 1))
+true
+```
 """
 macro ($)(args...)
     esc(atmath_impl(args...))
@@ -90,7 +104,7 @@ function compile_body(body)
         dot_expr = body
         xf_expr = Map(identity)
     end
-    return dot_expr, xf_expr
+    return brace_to_eduction(dot_expr), xf_expr
 end
 
 function atmath_impl(init, op, body)
@@ -142,6 +156,35 @@ function compile_filter(filter_expr)
     subs(x::Expr) = Expr(x.head, subs.(x.args)...)
     subs(x::Symbol) = x == :_ ? var : x
     return :($Filter($var -> $(subs(filter_expr))))
+end
+
+isdotcall(::Any) = false
+isdotcall(ex::Expr) =
+    ex.head === :. && length(ex.args) == 2 && ex.args[2] isa Expr &&
+    ex.args[2].head === :tuple
+
+isdotbracecall(::Any) = false
+isdotbracecall(ex::Expr) =
+    ex.head === :. && length(ex.args) == 2 && ex.args[2] isa Expr &&
+    ex.args[2].head === :quote && length(ex.args[2].args[1]) == 1 &&
+    ex.args[2].args[1] isa Expr &&
+    ex.args[2].args[1].head == :braces && length(ex.args[2].args[1].args) == 1
+
+brace_to_eduction(x) = x
+function brace_to_eduction(ex::Expr)
+    if isdotcall(ex)
+        args = brace_to_eduction.(ex.args[2].args)
+        return Expr(:., ex.args[1], Expr(:tuple, args...))
+    elseif isdotbracecall(ex)
+        return Expr(:., ex.args[1], brace_to_eduction(ex.args[2].args[1]))
+    elseif ex.head === :braces
+        @assert length(ex.args) == 1
+        return :($(@__MODULE__).@eduction $ex)
+    elseif ex.head === :call
+        return Expr(:call, brace_to_eduction.(ex.args)...)
+    else
+        return ex
+    end
 end
 
 """
