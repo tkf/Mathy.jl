@@ -42,13 +42,7 @@ julia&gt; @$ 0 + { 2 .* ({ 1:10 | isodd(_) } .^ 2 .+ 1) .- 1 | _ % 3 == 0 }
 153
 
 julia&gt; ans == sum(filter(x -&gt; x % 3 == 0, 2 .* (filter(isodd, 1:10) .^ 2 .+ 1) .- 1))
-true
-
-julia&gt; @$ + isodd.({ 1:10 | _ % 3 == 0 })
-2
-
-julia&gt; @$ + isodd.{ 1:10 | _ % 3 == 0 }  # () can be omitted
-2</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/d63ff8ec9a0218a5894acb58bf844b3eaba1dcea/src/Mathy.jl#LL15-L20">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="Mathy.@eduction-Tuple{Any}" href="#Mathy.@eduction-Tuple{Any}"><code>Mathy.@eduction</code></a> — <span class="docstring-category">Macro</span>.</div><div><div><pre><code class="language-none">@eduction dot_expr
+true</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/6463bbb13e46f01f1ea12b7ed765d4db9c16445d/src/Mathy.jl#LL15-L20">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="Mathy.@eduction-Tuple{Any}" href="#Mathy.@eduction-Tuple{Any}"><code>Mathy.@eduction</code></a> — <span class="docstring-category">Macro</span>.</div><div><div><pre><code class="language-none">@eduction dot_expr
 @eduction { dot_expr | filter_expr }</code></pre><p>Like <a href="#Mathy.@\$-Tuple"><code>@$</code></a> but without <code>op</code>.</p><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; using Mathy
 
 julia&gt; collect(@eduction { (1:10) .^ 2 | isodd(_) })
@@ -57,4 +51,4 @@ julia&gt; collect(@eduction { (1:10) .^ 2 | isodd(_) })
   9
  25
  49
- 81</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/d63ff8ec9a0218a5894acb58bf844b3eaba1dcea/src/Mathy.jl#LL231-L249">source</a></section><footer><hr/><a class="next" href="internals/"><span class="direction">Next</span><span class="title">Internals</span></a></footer></article></body></html>
+ 81</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/6463bbb13e46f01f1ea12b7ed765d4db9c16445d/src/Mathy.jl#LL227-L245">source</a></section><footer><hr/><a class="next" href="internals/"><span class="direction">Next</span><span class="title">Internals</span></a></footer></article></body></html>
