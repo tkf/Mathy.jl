@@ -42,6 +42,15 @@ julia> @\$ + { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
 
 julia> ans == sum(x for x in (1:10) .^ 2 if (x + 2) % 3 == 0)
 true
+
+julia> ∑ = +
+       ∏ = *;
+
+julia> @\$ ∑ { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
+259
+
+julia> @\$ ∏ { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
+501760000
 ```
 """
 macro ($)(args...)
@@ -81,12 +90,6 @@ function atmath_impl(init, op, body)
         dot_expr = body
         xf_expr = Map(identity)
     end
-    # op = get(Dict(
-    #     :∑ => +,  # \sum
-    #     :Σ => +,  # \Sigma
-    #     :∏ => *,  # \prod
-    #     :Π => *,  # \Pi
-    # ), op, op)
     return quote
         $mapfoldl($xf_expr, $op, $air.($dot_expr); init=$init, simd=true)
     end
