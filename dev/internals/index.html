@@ -8,7 +8,7 @@ julia&gt; isdotbracecall(:(f.(x)))
 false
 
 julia&gt; isdotbracecall(:(f{x}))
-false</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/d2a6f62f17324d1c13439f50e26971142570d27c/src/Mathy.jl#LL183-L199">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="Mathy.isdotcall-Tuple{Any}" href="#Mathy.isdotcall-Tuple{Any}"><code>Mathy.isdotcall</code></a> — <span class="docstring-category">Method</span>.</div><div><div><pre><code class="language-none">isdotcall(x)</code></pre><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; using Mathy: isdotcall
+false</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/d63ff8ec9a0218a5894acb58bf844b3eaba1dcea/src/Mathy.jl#LL189-L205">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="Mathy.isdotcall-Tuple{Any}" href="#Mathy.isdotcall-Tuple{Any}"><code>Mathy.isdotcall</code></a> — <span class="docstring-category">Method</span>.</div><div><div><pre><code class="language-none">isdotcall(x)</code></pre><p><strong>Examples</strong></p><pre><code class="language-julia-repl">julia&gt; using Mathy: isdotcall
 
 julia&gt; isdotcall(:(f.(x)))
 true
@@ -17,4 +17,4 @@ julia&gt; isdotcall(:(f(x)))
 false
 
 julia&gt; isdotcall(:(x .+ y))  # handled separately
-false</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/d2a6f62f17324d1c13439f50e26971142570d27c/src/Mathy.jl#LL161-L177">source</a></section><footer><hr/><a class="previous" href="../"><span class="direction">Previous</span><span class="title">Home</span></a></footer></article></body></html>
+false</code></pre></div></div><a class="source-link" target="_blank" href="https://github.com/tkf/Mathy.jl/blob/d63ff8ec9a0218a5894acb58bf844b3eaba1dcea/src/Mathy.jl#LL167-L183">source</a></section><footer><hr/><a class="previous" href="../"><span class="direction">Previous</span><span class="title">Home</span></a></footer></article></body></html>
