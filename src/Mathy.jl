@@ -53,7 +53,7 @@ julia> @\$ ∏ { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
 501760000
 ```
 
-curly braces can be nested (although it is not optimized yet as of
+Curly braces can be nested (although it is not optimized yet as of
 Transducers 0.2.1):
 
 ```jldoctest; setup = :(using Mathy)
@@ -225,7 +225,7 @@ end
     @eduction dot_expr
     @eduction { dot_expr | filter_expr }
 
-Like @\$ but without `op`.
+Like [`@\$`](@ref) but without `op`.
 
 # Examples
 ```jldoctest
