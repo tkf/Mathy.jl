@@ -158,15 +158,49 @@ function compile_filter(filter_expr)
     return :($Filter($var -> $(subs(filter_expr))))
 end
 
+"""
+    isdotcall(x)
+
+# Examples
+```jldoctest
+julia> using Mathy: isdotcall
+
+julia> isdotcall(:(f.(x)))
+true
+
+julia> isdotcall(:(f(x)))
+false
+
+julia> isdotcall(:(x .+ y))  # handled separately
+false
+```
+"""
 isdotcall(::Any) = false
 isdotcall(ex::Expr) =
     ex.head === :. && length(ex.args) == 2 && ex.args[2] isa Expr &&
     ex.args[2].head === :tuple
 
+"""
+    isdotbracecall(x)
+
+# Examples
+```jldoctest
+julia> using Mathy: isdotbracecall
+
+julia> isdotbracecall(:(f.{x}))
+true
+
+julia> isdotbracecall(:(f.(x)))
+false
+
+julia> isdotbracecall(:(f{x}))
+false
+```
+"""
 isdotbracecall(::Any) = false
 isdotbracecall(ex::Expr) =
     ex.head === :. && length(ex.args) == 2 && ex.args[2] isa Expr &&
-    ex.args[2].head === :quote && length(ex.args[2].args[1]) == 1 &&
+    ex.args[2].head === :quote && length(ex.args[2].args) == 1 &&
     ex.args[2].args[1] isa Expr &&
     ex.args[2].args[1].head == :braces && length(ex.args[2].args[1].args) == 1
 
