@@ -19,14 +19,29 @@ $_atmath_syntax
 ```jldoctest
 julia> using Mathy
 
-julia> @\$ + (1:10) .^ 2  # == sum((1:10) .^ 2)
+julia> @\$ + (1:10) .^ 2
 385
+
+julia> ans == sum((1:10) .^ 2)
+true
+
+julia> @\$ 0.0 + (1:10) .^ 2
+385.0
+
+julia> @\$ 1000 + (1:10) .^ 2
+1385
 
 julia> @\$ + { (1:10) .^ 2 | isodd(_) }
 165
 
+julia> ans == sum(x for x in (1:10) .^ 2 if isodd(x))
+true
+
 julia> @\$ + { (1:10) .^ 2 | (_ + 2) % 3 == 0 }
 259
+
+julia> ans == sum(x for x in (1:10) .^ 2 if (x + 2) % 3 == 0)
+true
 ```
 """
 macro ($)(args...)
