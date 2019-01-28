@@ -11,6 +11,7 @@ mathy_makedocs(; kwargs...) = makedocs(;
     sitename="Mathy.jl",
     authors="Takafumi Arakaki",
     assets=[],
+    root=@__DIR__,
     strict=true,
     kwargs...
 )

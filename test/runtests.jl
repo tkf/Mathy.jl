@@ -1,8 +1,8 @@
 using Mathy
 using Test
 
-include("../docs/make.jl")
+include("../docs/utils.jl")
 
 @testset "Mathy.jl" begin
-    # Write your own tests here.
+    @test (mathy_makedocs(); true)
 end
