@@ -65,12 +65,6 @@ julia> @\$ 0 + { 2 .* ({ 1:10 | isodd(_) } .^ 2 .+ 1) .- 1 | _ % 3 == 0 }
 
 julia> ans == sum(filter(x -> x % 3 == 0, 2 .* (filter(isodd, 1:10) .^ 2 .+ 1) .- 1))
 true
-
-julia> @\$ + isodd.({ 1:10 | _ % 3 == 0 })
-2
-
-julia> @\$ + isodd.{ 1:10 | _ % 3 == 0 }  # () can be omitted
-2
 ```
 """
 macro ($)(args...)
@@ -215,9 +209,11 @@ function brace_to_eduction(ex::Expr)
     if isdotcall(ex)
         args = brace_to_eduction.(ex.args[2].args)
         return Expr(:., ex.args[1], Expr(:tuple, args...))
+    #=
     elseif isdotbracecall(ex)
         return Expr(:., ex.args[1],
                     Expr(:tuple, brace_to_eduction(ex.args[2].args[1])))
+    =#
     elseif ex.head === :braces
         @assert length(ex.args) == 1
         return :($(@__MODULE__).@eduction $ex)
