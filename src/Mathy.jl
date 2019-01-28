@@ -1,6 +1,6 @@
 module Mathy
 
-export @$
+export @$, @eduction
 
 using Transducers
 using Transducers: air
@@ -75,7 +75,7 @@ end
 atmath_impl(op, body) =
     atmath_impl(Transducers.MissingInit(), op, body)
 
-function atmath_impl(init, op, body)
+function compile_body(body)
     if body.head === :braces
         @assert length(body.args) == 1
         parsed = parse_dot_expr(body.args[1])
@@ -90,6 +90,11 @@ function atmath_impl(init, op, body)
         dot_expr = body
         xf_expr = Map(identity)
     end
+    return dot_expr, xf_expr
+end
+
+function atmath_impl(init, op, body)
+    dot_expr, xf_expr = compile_body(body)
     return quote
         $mapfoldl($xf_expr, $op, $air.($dot_expr); init=$init, simd=true)
     end
@@ -137,6 +142,34 @@ function compile_filter(filter_expr)
     subs(x::Expr) = Expr(x.head, subs.(x.args)...)
     subs(x::Symbol) = x == :_ ? var : x
     return :($Filter($var -> $(subs(filter_expr))))
+end
+
+"""
+    @eduction dot_expr
+    @eduction { dot_expr | filter_expr }
+
+Like @\$ but without `op`.
+
+# Examples
+```jldoctest
+julia> using Mathy
+
+julia> collect(@eduction { (1:10) .^ 2 | isodd(_) })
+5-element Array{Int64,1}:
+  1
+  9
+ 25
+ 49
+ 81
+```
+"""
+macro eduction(ex)
+    esc(ateduction_impl(ex))
+end
+
+function ateduction_impl(ex)
+    dot_expr, xf_expr = compile_body(ex)
+    return :($eduction($xf_expr, $air.($dot_expr)))
 end
 
 end # module
