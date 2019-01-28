@@ -15,6 +15,51 @@ const _atmath_syntax = raw"""
 """
 $_atmath_syntax
 
+Reduce dot call expression `dot_expr` [^dot_syntax] with binary
+operator `op` without allocating any intermediate arrays.  The result
+of the `dot_expr` may be filtered by `filter_expr` using set-builder
+like notation `{ dot_expr | filter_expr }`.  Expression `dot_expr`
+itself may contain the set-builder like notation.  Optionally, the
+initial value `init` for operator `op` can be specified.
+
+For example, the expression `@\$ + { f.(a) | p(_) }` is equivalent to
+the mathematical notation
+
+```math
+\\sum \\{ y \\in f.(a) \\,|\\, p(y) \\}
+=
+\\sum_{x \\in a \\,|\\, p(f(x))} f(x)
+```
+
+where predicate `p` is a function that takes the output of `f` and
+returns a Boolean.  In general `filter_expr` is evaluated by
+"substituting" each output element of `dot_expr` to `_` in
+`filter_expr`.  Likewise, `@\$ * { f.(a) | p(_) }` is equivalent to
+``\\prod \\{ y \\in f.(a) \\,|\\, p(y) \\}``.
+
+!!! note
+
+    Although set-builder like notation is used, the order of
+    application of `op` is guaranteed to be left-to-right (`foldl`).
+    Thus, unlike the mathematical notation, operator `op` does not
+    have to be commutative or associative.
+
+Under the hood, `@\$ init op { dot_expr | filter_expr }` is converted
+to an expression that is conceptually equivalent to
+
+```
+mapfoldl(Filter(_ -> filter_expr), op, dot_expr, init=init, simd=true)
+```
+
+where `mapfoldl` and `Filter` are implemented in
+[Transducers.jl](https://github.com/tkf/Transducers.jl).  However, the
+output of `dot_expr` is never "materialized"; each output element is
+computed on-the-fly.
+
+[^dot_syntax]:
+    Dot Syntax for Vectorizing Functions:
+    <https://docs.julialang.org/en/latest/manual/functions/#man-vectorized-1>
+
 # Examples
 ```jldoctest
 julia> using Mathy
