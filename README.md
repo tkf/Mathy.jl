@@ -5,5 +5,12 @@
 [![Codecov](https://codecov.io/gh/tkf/Mathy.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/tkf/Mathy.jl)
 [![Coveralls](https://coveralls.io/repos/github/tkf/Mathy.jl/badge.svg?branch=master)](https://coveralls.io/github/tkf/Mathy.jl?branch=master)
 
-Mathy.jl is a math-like DSL for
+Mathy.jl is a math-like DSL for broadcasting expressions and
 [Transducers.jl](https://github.com/tkf/Transducers.jl).
+
+```julia
+julia> @$ 0 + { 2 .* ({ 1:10 | isodd(_) } .^ 2 .+ 1) .- 1 | _ % 3 == 0 }
+153
+```
+
+See more in [documentation](https://tkf.github.io/Mathy.jl/dev).
