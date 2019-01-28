@@ -10,6 +10,7 @@ makedocs(;
     sitename="Mathy.jl",
     authors="Takafumi Arakaki",
     assets=[],
+    strict=true,
 )
 
 deploydocs(;
