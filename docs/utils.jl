@@ -1,6 +1,6 @@
 using Documenter, Mathy
 
-makedocs(;
+mathy_makedocs(; kwargs...) = makedocs(;
     modules=[Mathy],
     format=Documenter.HTML(),
     pages=[
@@ -12,8 +12,5 @@ makedocs(;
     authors="Takafumi Arakaki",
     assets=[],
     strict=true,
-)
-
-deploydocs(;
-    repo="github.com/tkf/Mathy.jl",
+    kwargs...
 )
